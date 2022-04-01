@@ -3,7 +3,7 @@ import React from 'react'
 export const FilterForm = (props) => {
 
   const onPriceInputChange = (e) => {
-    // TODO: implement handler
+    props.onPriceInputChange(e.target.name, e.target.value);
   }
 
   // TODO: bind handlers and props

@@ -5,6 +5,8 @@ import { ToggleColumns } from './ToggleColumns';
 import { ProductList } from './ProductList';
 import { FilterForm } from './FilterForm';
 
+import products from '../assets/products.json'
+
 export const Search = (props) => {
   const [price, setPrice] = useState({ priceFrom: '', priceTo: '' });
 
@@ -17,32 +19,37 @@ export const Search = (props) => {
   });
 
   const onPriceInputChange = (name, value) => {
-    // TODO: implement price change handler
+    setPrice({ ...price, [name]: value });
   }
 
   const onCheckboxClick = (name, checked) => {
-    // TODO: implement checkbox click handler
+    setColumns({ ...columns, [name]: checked });
   }
 
-  const filterProducts = () => {
-    // TODO: implement handler for filtering products by price range
-  }
+  // array to show only products that match the price range and columns checked.
+  const filterProducts = (data, price, columns) => {
+    return data.filter((product) => {
+      return product.price >= price.priceFrom && product.price <= price.priceTo &&
+        Object.keys(columns).every(key => columns[key]);
+    });
+  };
 
-  let displayedProducts = [];
+  let displayedProducts = filterProducts(products, price, columns);
+
   return (
     <div className="Products">
       <FilterForm
-        priceFrom={''}
-        priceTo={''}
-        onPriceInputChange={''} />
+        priceFrom={price.priceFrom}
+        priceTo={price.priceTo}
+        onPriceInputChange={onPriceInputChange} />
 
       <ToggleColumns
-        onCheckboxClick={''}
-        columns={''} />
+        onCheckboxClick={onCheckboxClick}
+        columns={columns} />
 
       <ProductList
         products={displayedProducts}
-        columns={''} />
+        columns={columns} />
     </div>
   );
 }

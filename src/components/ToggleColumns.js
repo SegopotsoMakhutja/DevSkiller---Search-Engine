@@ -2,7 +2,7 @@ import React from 'react'
 
 export const ToggleColumns = (props) => {
   const onCheckboxClick = (e) => {
-    // TODO: implement checkbox click handler
+    props.columns[e.target.name] = e.target.checked;
   }
 
   // TODO: Bind handlers and props
@@ -18,7 +18,8 @@ export const ToggleColumns = (props) => {
             <input
               id={column}
               name={column}
-              type="checkbox" />
+                type="checkbox"
+                onClick={onCheckboxClick} />
           </div>)
         })
       }
