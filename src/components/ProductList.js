@@ -6,26 +6,38 @@ export const ProductList = (props) => {
   return (
     <div id="product-list">
       <header>
-        <strong>Product List {props.length} items</strong>
+        <strong>Product List ({props.products.length} items)</strong>
       </header>
       <table>
         <thead>
           <tr>
-            {props.columns.id && <th>ID</th>}
-            {props.columns.name && <th>Name</th>}
-            {props.columns.department && <th>Department</th>}
-            {props.columns.price && <th>Price</th>}
+            {/* show only selected headers */}
+            {Object.keys(props.columns).map(column => {
+              if (props.columns[column]) {
+                return (
+                  <th key={column}>{column}</th>
+                )
+              }
+              return null;
+            })}
           </tr>
         </thead>
         <tbody>
-          {products.map(product =>
-            <tr key={product.id}>
-              <td>{product.id}</td>
-              <td>{product.name}</td>
-              <td>{product.department}</td>
-              <td>{product.price}</td>
-            </tr>
-          )}
+            {/* show only selected rows and columns */}
+            {products.map(product => {
+              return (
+                <tr key={product.id}>
+                  {Object.keys(props.columns).map(column => {
+                    if (props.columns[column]) {
+                      return (
+                        <td key={column}>{product[column]}</td>
+                      )
+                    }
+                    return null;
+                  })}
+                </tr>
+              )
+            })}
         </tbody>
       </table>
     </div>
