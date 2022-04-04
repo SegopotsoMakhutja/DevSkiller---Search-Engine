@@ -5,8 +5,6 @@ import { ToggleColumns } from './ToggleColumns';
 import { ProductList } from './ProductList';
 import { FilterForm } from './FilterForm';
 
-import products from '../assets/products.json'
-
 export const Search = (props) => {
   const [price, setPrice] = useState({ priceFrom: '', priceTo: '' });
 
@@ -26,30 +24,61 @@ export const Search = (props) => {
     setColumns({ ...columns, [name]: checked });
   }
 
-  // array to show only products that match the price range and columns checked.
-  const filterProducts = (data, price, columns) => {
-    return data.filter((product) => {
-      return product.price >= price.priceFrom && product.price <= price.priceTo &&
-        Object.keys(columns).every(key => columns[key]);
-    });
+  // return filtered props by range priceFrom and priceTo
+  // also filter by higher from priceFrom and lower from priceTo
+  const filterProducts = () => {
+    const { priceFrom, priceTo } = price;
+    const { products } = props;
+
+    // this is a no operation return.
+    if (priceFrom === '' && priceTo === '') {
+      return products;
+    }
+
+    // filter by a higher priceFrom and a lower priceTo
+    if (priceFrom !== '' && priceTo !== '') {
+      return products.filter(product => {
+        const price = Number(product.price);
+        return price >= Number(priceFrom) && price <= Number(priceTo);
+      });
+    }
+
+    // filter by a lower priceFrom or a higher priceTo
+    if (priceFrom !== '') {
+      return products.filter(product => {
+        const price = Number(product.price);
+        return price >= Number(priceFrom);
+      });
+    }
+
+    // filter by a higher priceFrom
+    if (priceTo !== '') {
+      return products.filter(product => {
+        const price = Number(product.price);
+        return price <= Number(priceTo);
+      });
+    }
   };
 
-  let displayedProducts = filterProducts(products, price, columns);
+  let displayedProducts = filterProducts();
 
   return (
     <div className="Products">
       <FilterForm
         priceFrom={price.priceFrom}
         priceTo={price.priceTo}
-        onPriceInputChange={onPriceInputChange} />
+        onPriceInputChange={onPriceInputChange}
+      />
 
       <ToggleColumns
         onCheckboxClick={onCheckboxClick}
-        columns={columns} />
+        columns={columns} 
+      />
 
       <ProductList
         products={displayedProducts}
-        columns={columns} />
+        columns={columns}
+      />
     </div>
   );
 }
